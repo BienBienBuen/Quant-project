@@ -7,13 +7,16 @@ import nasdaqdatalink as ndl
 import datetime
 
 """using nasdaqdatalink"""
+# def data_to_csv(ticker, start, end):
+#     ndl.ApiConfig.api_key = "nsrdu2JfgqSVB4Czoca6"
+#     table = ndl.get_table('QDL/BITFINEX', date={'gte': start, 'lte': end} , code=ticker)
+#     print(type(table))
+#     print(table)
+
+"""using yfinance"""
 def data_to_csv(ticker, start, end):
-    ndl.ApiConfig.api_key = "nsrdu2JfgqSVB4Czoca6"
-    table = ndl.get_table('QDL/BITFINEX', date={'gte': start, 'lte': end} , code=ticker)
-    print(type(table))
-    print(table)
-
-
+    data = yf.download(ticker, start=start, end=end)
+    print(data)
 
 if __name__ == "__main__":
     print("Hello, World!")
