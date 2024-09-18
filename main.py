@@ -22,12 +22,12 @@ def download_data(stock, start, end):
 
 start_date = datetime.datetime(2013,1,1)
 end_date = datetime.datetime(2024,6,1)
-slope = 1.1153621020607556
-intercept = -0.6439426102796257
+slope = 0.9131566687899764 
+intercept = 0.22382541828609814
 
 if __name__ == "__main__":
-    SGD = download_data('SGD=X', start_date, end_date)
-    EUR = download_data('EUR=X', start_date, end_date)
+    SGD = download_data('AUD=X', start_date, end_date)
+    EUR = download_data('NZD=X', start_date, end_date)
     residues = EUR - slope * SGD - intercept 
     plt.plot(residues)
     plt.show()
