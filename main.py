@@ -18,17 +18,20 @@ def download_data(stock, start, end):
     stock_data = {}
     ticker = yf.download(stock, start,end, progress=False)
     stock_data['price'] = ticker['Adj Close']
-    return pd.DataFrame(stock_data)
+    return pd.DataFrame(stock_data).fillna(method='ffill')
 
-start_date = datetime.datetime(2013,1,1)
-end_date = datetime.datetime(2024,6,1)
+start_date = datetime.datetime(2012,12,1)
+end_date = datetime.datetime(2012,12,31)
 slope = 0.9131566687899764 
 intercept = 0.22382541828609814
+invested = 0
 
 if __name__ == "__main__":
-    SGD = download_data('AUD=X', start_date, end_date)
-    EUR = download_data('NZD=X', start_date, end_date)
-    residues = EUR - slope * SGD - intercept 
+    AUD = download_data('AUD=X', start_date, end_date)
+    NZD = download_data('NZD=X', start_date, end_date)
+    print(np.shape(AUD), np.shape(NZD))
+    residues = NZD - slope * AUD - intercept 
     plt.plot(residues)
     plt.show()
+    print(AUD)
 
