@@ -5,33 +5,11 @@ import datetime
 import os
 from utils import download_data, filter_non_null_rows, perform_regression
 
-
-"""using nasdaqdatalink"""
-# def data_to_csv(ticker, start, end):
-#     ndl.ApiConfig.api_key = "nsrdu2JfgqSVB4Czoca6"
-#     table = ndl.get_table('QDL/BITFINEX', date={'gte': start, 'lte': end} , code=ticker)
-#     print(type(table))
-#     print(table)
-
-"""using yfinance"""
-def download_data(stock, start, end):
-    stock_data = {}
-    ticker = yf.download(stock, start,end, progress=False)
-    stock_data['price'] = ticker['Adj Close']
-    return pd.DataFrame(stock_data).fillna(method='ffill')
-
 start_date = datetime.datetime(2012,12,1)
 end_date = datetime.datetime(2012,12,31)
 slope = 0.9131566687899764 
 intercept = 0.22382541828609814
 invested = 0
-
-if __name__ == "__main__":
-    AUD = download_data('AUD=X', start_date, end_date)
-    NZD = download_data('NZD=X', start_date, end_date)
-    print(np.shape(AUD), np.shape(NZD))
-    residues = NZD - slope * AUD - intercept 
-    plt.plot(residues)
 
 """backtest"""
 def backtest(start_date:datetime.datetime, end_date:datetime.datetime, ticker_list:list, strat, initial_capital=100000):
@@ -129,17 +107,18 @@ if __name__ == "__main__":
     # end_date = datetime.datetime(2024,6,1)
     # slope = 0.9131566687899764 
     # intercept = 0.22382541828609814
-    # SGD = download_data('AUD=X', start_date, end_date)
-    # EUR = download_data('NZD=X', start_date, end_date)
-    # residues = EUR - slope * SGD - intercept 
+    # AUD = download_data('AUD=X', start_date, end_date)
+    # NZD = download_data('NZD=X', start_date, end_date)
+    # print(np.shape(AUD), np.shape(NZD))
+    # residues = NZD - slope * AUD - intercept 
     # plt.plot(residues)
     # plt.show()
-    df, capital_over_time, sharpe_ratio, max_drawdown = backtest(datetime.datetime(2013,1,1), datetime.datetime(2024,6,1), ['AUD=X', 'NZD=X'], inversion_strategy)
-    print(df['residual'])
+    cur_list1 = ['AUD=X', 'NZD=X']
+    cur_list2 = ['SGD=X', 'EUR=X']
+    df, capital_over_time, sharpe_ratio, max_drawdown = backtest(datetime.datetime(2013,1,1), datetime.datetime(2024,6,1), cur_list2, inversion_strategy)
     plt.plot(df['residual'])
-    plt.plot(df['signal'])
+    #plt.plot(df['signal'])
     plt.show()
-    print(AUD)
 
     # print(f'sharpe ratio: {sharpe_ratio}')
     # print(f'max drawdown: {max_drawdown}')
