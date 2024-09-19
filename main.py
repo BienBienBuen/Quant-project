@@ -103,16 +103,17 @@ def reversion_signal(residual, threshold=0.025):
         return 0.001
 
 if __name__ == "__main__":
-    # start_date = datetime.datetime(2013,1,1)
-    # end_date = datetime.datetime(2024,6,1)
+    start_date = datetime.datetime(2013,1,1)
+    end_date = datetime.datetime(2024,6,1)
     # slope = 0.9131566687899764 
     # intercept = 0.22382541828609814
-    # AUD = download_data('AUD=X', start_date, end_date)
-    # NZD = download_data('NZD=X', start_date, end_date)
-    # print(np.shape(AUD), np.shape(NZD))
-    # residues = NZD - slope * AUD - intercept 
-    # plt.plot(residues)
-    # plt.show()
+    AUD = download_data('AUD=X', start_date, end_date)
+    NZD = download_data('NZD=X', start_date, end_date)
+    print(np.shape(AUD), np.shape(NZD))
+    residues = NZD - slope * AUD - intercept 
+    plt.plot(residues)
+    plt.show()
+
     cur_list1 = ['AUD=X', 'NZD=X']
     cur_list2 = ['SGD=X', 'EUR=X']
     df, capital_over_time, sharpe_ratio, max_drawdown = backtest(datetime.datetime(2013,1,1), datetime.datetime(2024,6,1), cur_list2, inversion_strategy)
