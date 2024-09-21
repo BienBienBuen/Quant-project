@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import datetime
 import os
 from utils import download_data, filter_non_null_rows, perform_regression
+import warnings
+warnings.filterwarnings("ignore")
 
 start_date = datetime.datetime(2012,12,1)
 end_date = datetime.datetime(2012,12,31)
 slope = 0.8350097957816879
 intercept = 0.31876376509492976
-invested = 0
 
 """backtest"""
 def backtest(start_date:datetime.datetime, end_date:datetime.datetime, ticker_list:list, strat, initial_capital=100000):
@@ -68,7 +69,7 @@ def inversion_strategy(data:pd.DataFrame, initial_capital:str, ratio=slope, insp
     data['short'] = 0
     data['cash'] = initial_capital
 
-    print(data)
+    #print(data)
     for i in range(inspection_window, len(data)):
         long = True
         pair1, pair2 = column_names[0], column_names[1]
@@ -79,7 +80,7 @@ def inversion_strategy(data:pd.DataFrame, initial_capital:str, ratio=slope, insp
             data.at[data.index[i], 'short']= (data['capital'][i-1]*ratio) /data[pair2][i]
             data.at[data.index[i], 'cash'] = data['short'][i] * data[pair2][i]
             data.at[data.index[i], 'capital'] = data['long'][i] * data[pair1][i] - data['short'][i] * data[pair2][i] + data['cash'][i]
-            print(data['capital'][i])
+            #print(data['capital'][i])
 
         elif data['signal'][i] == -1 and data['signal'][i-1] != -1:
             #enter short position
@@ -103,8 +104,8 @@ def inversion_strategy(data:pd.DataFrame, initial_capital:str, ratio=slope, insp
             
         else:
             #hold position
-            data.at[data.index[i], 'long'] = data['long'][i-1]
-            data.at[data.index[i], 'short'] = data['short'][i-1]
+            data.at[data.index[i], 'long'] = 0.99995 * data['long'][i-1]
+            data.at[data.index[i], 'short'] = 0.99995 * data['short'][i-1]
             data.at[data.index[i], 'cash'] = data['cash'][i-1]
             if data['signal'][i] > 0:
                 data.at[data.index[i], 'capital'] = data['long'][i] * data[pair1][i] - data['short'][i] * data[pair2][i] + data['cash'][i]
@@ -154,7 +155,7 @@ if __name__ == "__main__":
 
     cur_list1 = ['AUD=X', 'NZD=X']
     cur_list2 = ['SGD=X', 'EUR=X']
-    df, capital_over_time, sharpe_ratio, max_drawdown = backtest(datetime.datetime(2013,1,1), datetime.datetime(2024,6,1), cur_list1, inversion_strategy)
+    df, capital_over_time, sharpe_ratio, max_drawdown = backtest(datetime.datetime(2018,7,1), datetime.datetime(2024,6,1), cur_list1, inversion_strategy)
     df.to_csv('mean_reversion.csv')
 
     print(f'sharpe ratio: {sharpe_ratio}')
